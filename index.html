@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartC Compiler Lab | Lex + LL(1) | Team Edition</title>
+  <link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#07101f">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">&lt;/&gt;</div>
+        <div>
+          <h1>SmartC Compiler Lab</h1>
+          <p>Lexical Analyzer + LL(1) Parser Visualizer</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="status-pill"><span></span> Compiler Engine Ready</div>
+        <div class="team-mini">TEAM • 3 MEMBERS</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <div class="eyebrow">COMPILER DESIGN LAB PROJECT</div>
+          <h2>See how a tiny C compiler <em>thinks</em>.</h2>
+          <div class="hero-badges"><span>LEXICAL ANALYSIS</span><span>LL(1) PARSING</span><span>LIVE VISUALIZATION</span></div>
+          <p>Write C-like code, tokenize it with a Lex-inspired scanner, and watch an LL(1) predictive parser validate the syntax step by step.</p>
+          <div class="hero-actions">
+            <button id="compileBtn" class="primary">▶ Compile & Visualize</button>
+            <button id="sampleBtn" class="secondary">Load Smart Sample</button>
+            <button id="clearBtn" class="ghost">Clear</button>
+          </div>
+        </div>
+        <div class="pipeline">
+          <div class="pipe-card active"><b>01</b><span>Source Code</span><small>C-like Input</small></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-card"><b>02</b><span>LEX Scanner</span><small>Tokens</small></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-card"><b>03</b><span>LL(1) Parser</span><small>Parse Tree</small></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-card"><b>04</b><span>Result</span><small>Accepted / Error</small></div>
+        </div>
+      </section>
+
+      <section class="quick-stats">
+        <div class="stat-card"><span class="stat-icon">⌁</span><div><b id="statTokens">0</b><small>Tokens</small></div></div>
+        <div class="stat-card"><span class="stat-icon">#</span><div><b id="statIds">0</b><small>Identifiers</small></div></div>
+        <div class="stat-card"><span class="stat-icon">ƒ</span><div><b id="statOps">0</b><small>Operators</small></div></div>
+        <div class="stat-card"><span class="stat-icon">✓</span><div><b id="statStatus">—</b><small>Syntax Status</small></div></div>
+      </section>
+
+      <section class="workspace">
+        <div class="editor-panel panel">
+          <div class="panel-head">
+            <div><span class="dot blue"></span><b>Source Code</b></div>
+            <span class="tag">C / C-Lite</span>
+          </div>
+          <div class="editor-wrap">
+            <div id="lineNumbers" class="line-numbers">1</div>
+            <textarea id="codeInput" spellcheck="false">int main() {
+    int a = 10;
+    int b = 20;
+    int sum = a + b;
+    if (sum > 20) {
+        print(sum);
+    }
+    return 0;
+}</textarea>
+          </div>
+          <div class="editor-footer">
+            <span id="charCount">0 chars</span>
+            <span>Try: declarations • expressions • if • while • print</span>
+          </div>
+        </div>
+
+        <div class="result-panel panel">
+          <div class="panel-head">
+            <div><span class="dot green"></span><b>Compiler Console</b></div>
+            <span id="compileStatus" class="tag neutral">WAITING</span>
+          </div>
+          <div id="console" class="console">
+            <div class="console-line muted">SmartC Compiler Lab v1.0</div>
+            <div class="console-line muted">Press “Compile & Visualize” to start the pipeline.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-head"><div><span class="dot purple"></span><b>Lexical Analysis — Token Stream</b></div><span id="tokenCount" class="tag neutral">0 TOKENS</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Lexeme</th><th>Token</th><th>Category</th></tr></thead>
+              <tbody id="tokenBody"><tr><td colspan="4" class="empty">Compile code to generate tokens.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div><span class="dot orange"></span><b>LL(1) Parser — Stack Trace</b></div><span id="stepCount" class="tag neutral">0 STEPS</span></div>
+          <div id="parserTrace" class="trace empty">Compile code to see predictive parsing steps.</div>
+        </div>
+      </section>
+
+      <section class="lower-grid">
+        <div class="panel">
+          <div class="panel-head"><div><span class="dot cyan"></span><b>Grammar Used</b></div><span class="tag">LL(1)</span></div>
+          <pre class="grammar">Program   → int main ( ) Block
+Block     → { StmtList }
+StmtList  → Stmt StmtList | ε
+Stmt      → Decl ; | Assign ; | IfStmt | Print ; | Return ;
+Decl      → int id Init
+Init      → = Expr | ε
+Assign    → id = Expr
+IfStmt    → if ( Cond ) Block
+Print     → print ( Expr )
+Return    → return Expr
+Expr      → Term Expr'
+Expr'     → + Term Expr' | - Term Expr' | ε
+Term      → Factor Term'
+Term'     → * Factor Term' | / Factor Term' | ε
+Factor    → id | num | ( Expr )
+Cond      → Expr RelOp Expr
+RelOp     → > | < | == | != | >= | <=</pre>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div><span class="dot pink"></span><b>Compiler Insights</b></div></div>
+          <div class="insights">
+            <div class="insight"><span>Σ</span><div><b>Lexical Units</b><p id="insightTokens">—</p></div></div>
+            <div class="insight"><span>∑</span><div><b>Identifiers</b><p id="insightIds">—</p></div></div>
+            <div class="insight"><span>ƒ</span><div><b>Operators</b><p id="insightOps">—</p></div></div>
+            <div class="insight"><span>✓</span><div><b>Syntax</b><p id="insightSyntax">—</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="team-section panel">
+        <div class="team-heading">
+          <div class="eyebrow">PROJECT TEAM</div>
+          <h3>Built with Compiler Design concepts &amp; teamwork.</h3>
+          <p>Designed for an interactive lab demonstration — from source code to tokens, parsing and final compilation status.</p>
+        </div>
+        <div class="team-grid">
+          <div class="member"><div class="avatar">VS</div><div><b>Vipul Sharma</b><small>Developer • UI &amp; Integration</small></div></div>
+          <div class="member"><div class="avatar">VG</div><div><b>Vinayak Goyal</b><small>Developer • Compiler Logic</small></div></div>
+          <div class="member"><div class="avatar">VK</div><div><b>Vivek Kumar</b><small>Developer • Documentation</small></div></div>
+        </div>
+      </section>
+
+      <section class="about panel">
+        <div>
+          <div class="eyebrow">WHY THIS PROJECT STANDS OUT</div>
+          <h3>Not just a compiler demo — a visual learning tool.</h3>
+        </div>
+        <div class="feature-list">
+          <span>🔎 Lex-style tokenization</span>
+          <span>🧠 LL(1) predictive parsing</span>
+          <span>📋 Stack trace visualization</span>
+          <span>⚡ Instant syntax diagnostics</span>
+          <span>🎓 Viva-friendly architecture</span>
+          <span>🌐 Runs with Live Server</span>
+        </div>
+      </section>
+    </main>
+    <footer>SmartC Compiler Lab • Compiler Design • Lex + LL(1) • <b>Project made by Vipul Sharma • Vinayak Goyal • Vivek Kumar</b></footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
